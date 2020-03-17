@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectInfo : MonoBehaviour
+namespace Agents
 {
-    [SerializeField] private ObjectType _objectType = ObjectType.Floor;
+    public class ObjectInfo : MonoBehaviour
+    {
+        public ObjectType objectType = ObjectType.Floor;
 
-    enum ObjectType
+    }
+
+    public enum ObjectType
     {
         Ball,
         Floor,
