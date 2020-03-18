@@ -7,6 +7,9 @@
 
 ## Unity : Unity 2019.2.8f1
 
+## Inputs :
+* WASD - move the board.
+
 ## Completed :
 * Prototype Moving the table
 * Prototype Moving the ball between walls around the table

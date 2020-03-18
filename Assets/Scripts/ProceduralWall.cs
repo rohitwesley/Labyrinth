@@ -64,7 +64,7 @@ public class ProceduralWall : MonoBehaviour
     /// </summary>
     public void WalkMaze()
     {
-        // TODO Fix bugs in Recursive backtracker Algorithm
+        // TODO Fix drawing walls and paths
         // Walk only if not all cells are visited and not backtracked to start.
         if(noVisitedCells < mazeDimensions.x * mazeDimensions.y)
         {
@@ -78,9 +78,7 @@ public class ProceduralWall : MonoBehaviour
             {
                 Vector2Int nextVisitedCellIndex = new Vector2Int(currentVisitedCellIndex.x,currentVisitedCellIndex.y+1);
                 // Add Neighbour if there is a path or Neighbouring Cell not visited 
-                if(maze[nextVisitedCellIndex.x, nextVisitedCellIndex.y] == CellNeighbours.Cell_Empty
-                    || maze[nextVisitedCellIndex.x, nextVisitedCellIndex.y] == CellNeighbours.Cell_Path_S
-                    || maze[nextVisitedCellIndex.x, nextVisitedCellIndex.y] == CellNeighbours.Cell_Path_N)
+                if(maze[nextVisitedCellIndex.x, nextVisitedCellIndex.y] == CellNeighbours.Cell_Empty)
                     stackNeighbours.Add(nextVisitedCellIndex);
             }
             // South Neighbours
@@ -88,9 +86,7 @@ public class ProceduralWall : MonoBehaviour
             {
                 Vector2Int nextVisitedCellIndex = new Vector2Int(currentVisitedCellIndex.x,currentVisitedCellIndex.y-1);
                 // Add Neighbour if there is a path or Neighbouring Cell not visited 
-                if(maze[nextVisitedCellIndex.x, nextVisitedCellIndex.y] == CellNeighbours.Cell_Empty
-                    || maze[nextVisitedCellIndex.x, nextVisitedCellIndex.y] == CellNeighbours.Cell_Path_N
-                    || maze[nextVisitedCellIndex.x, nextVisitedCellIndex.y] == CellNeighbours.Cell_Path_S)
+                if(maze[nextVisitedCellIndex.x, nextVisitedCellIndex.y] == CellNeighbours.Cell_Empty)
                     stackNeighbours.Add(nextVisitedCellIndex);
             }
             // West Neighbours
@@ -98,9 +94,7 @@ public class ProceduralWall : MonoBehaviour
             {
                 Vector2Int nextVisitedCellIndex = new Vector2Int(currentVisitedCellIndex.x+1,currentVisitedCellIndex.y);
                 // Add Neighbour if there is a path or Neighbouring Cell not visited 
-                if(maze[nextVisitedCellIndex.x, nextVisitedCellIndex.y] == CellNeighbours.Cell_Empty
-                    || maze[nextVisitedCellIndex.x, nextVisitedCellIndex.y] == CellNeighbours.Cell_Path_E
-                    || maze[nextVisitedCellIndex.x, nextVisitedCellIndex.y] == CellNeighbours.Cell_Path_W)
+                if(maze[nextVisitedCellIndex.x, nextVisitedCellIndex.y] == CellNeighbours.Cell_Empty)
                     stackNeighbours.Add(nextVisitedCellIndex);
             }
             // East Neighbours
@@ -108,12 +102,11 @@ public class ProceduralWall : MonoBehaviour
             {
                 Vector2Int nextVisitedCellIndex = new Vector2Int(currentVisitedCellIndex.x-1,currentVisitedCellIndex.y);
                 // Add Neighbour if there is a path or Neighbouring Cell not visited 
-                if(maze[nextVisitedCellIndex.x, nextVisitedCellIndex.y] == CellNeighbours.Cell_Empty
-                    || maze[nextVisitedCellIndex.x, nextVisitedCellIndex.y] == CellNeighbours.Cell_Path_W
-                    || maze[nextVisitedCellIndex.x, nextVisitedCellIndex.y] == CellNeighbours.Cell_Path_E)
+                if(maze[nextVisitedCellIndex.x, nextVisitedCellIndex.y] == CellNeighbours.Cell_Empty)
                     stackNeighbours.Add(nextVisitedCellIndex);
             }
 
+            
             // Are there any neighbours ?
             if(stackNeighbours.Count>0)
             {
@@ -124,32 +117,26 @@ public class ProceduralWall : MonoBehaviour
                     // Move to North Cell
                     case 0 :
                             maze[currentVisitedCellIndex.x ,currentVisitedCellIndex.y] = CellNeighbours.Cell_Path_N;
-                            // Add 1nd cell to the stack
-                            stack.Push(stackNeighbours[nextCellDirection]);
                             break;
                     // Move to South Cell
                     case 1 :
                             maze[currentVisitedCellIndex.x ,currentVisitedCellIndex.y] = CellNeighbours.Cell_Path_S;
-                            // Add 1nd cell to the stack
-                            stack.Push(stackNeighbours[nextCellDirection]);
                             break;
                     // Move to West Cell
                     case 2 :
                             maze[currentVisitedCellIndex.x ,currentVisitedCellIndex.y] = CellNeighbours.Cell_Path_W;
-                            // Add 1nd cell to the stack
-                            stack.Push(stackNeighbours[nextCellDirection]);
                             break;
                     // Move to East Cell
                     case 3 :
                             maze[currentVisitedCellIndex.x ,currentVisitedCellIndex.y] = CellNeighbours.Cell_Path_E;
-                            // Add 1nd cell to the stack
-                            stack.Push(stackNeighbours[nextCellDirection]);
                             break;
                 }
 
                 // Debug.Log("New Cell: " + stack.Peek().x + "," + stack.Peek().y);
                 // new cell
-                // Update 2nd cells status to visited
+                // Add next cell to the stack
+                stack.Push(stackNeighbours[nextCellDirection]);
+                // Update next cells status to visited
                 maze[stackNeighbours[nextCellDirection].x ,stackNeighbours[nextCellDirection].y] = CellNeighbours.Cell_Visited;
                 // Track no of visited cells to know when all cells visited.
                 noVisitedCells++;
@@ -176,6 +163,7 @@ public class ProceduralWall : MonoBehaviour
 
     private void Update()
     {
+        if(Input.GetKeyDown(KeyCode.Tab))
         WalkMaze();
     }
 
@@ -271,7 +259,7 @@ public class ProceduralWall : MonoBehaviour
                                 && py%(pathWidth+wallWidth)==pathWidth)
                             {
                                 Gizmos.color = Color.green;
-                                // Gizmos.color = Color.gray;
+                                Gizmos.color = Color.gray;
                             }
                             // Set South Path Tile
                             else if((maze[x,y] == CellNeighbours.Cell_Path_S)
@@ -279,7 +267,7 @@ public class ProceduralWall : MonoBehaviour
                                 && py%(pathWidth+wallWidth)==pathWidth)
                             {
                                 Gizmos.color = Color.red;
-                                // Gizmos.color = Color.gray;
+                                Gizmos.color = Color.gray;
                             }
                             // Set East Path Tile
                             else if((maze[x,y] == CellNeighbours.Cell_Path_E)
@@ -287,7 +275,7 @@ public class ProceduralWall : MonoBehaviour
                                 && py%(pathWidth+wallWidth)!=pathWidth)
                             {
                                 Gizmos.color = Color.yellow;
-                                // Gizmos.color = Color.gray;
+                                Gizmos.color = Color.gray;
                             } 
                             // Set West Path Tile
                             else if((maze[x,y] == CellNeighbours.Cell_Path_W)
@@ -295,7 +283,7 @@ public class ProceduralWall : MonoBehaviour
                                 && py%(pathWidth+wallWidth)!=pathWidth)
                             {
                                 Gizmos.color = Color.yellow;
-                                // Gizmos.color = Color.gray;
+                                Gizmos.color = Color.gray;
                             }   
                         }
                         
