@@ -1,5 +1,5 @@
 
-# H1 Title : Labyrinth
+# Game : Labyrinth
 
 ## Git : https://github.com/rohitwesley/Labyrinth.git
 
@@ -24,6 +24,9 @@
 * Prototype Ball Toon Personality using Animation States, Particle FX with creative use interactoins with the ball
 * Implement hole and Death state FX
 * Update Game Design Doc. explaning the art.
+* Implement Sound FX
 * Implement JSON binding for saving score localy
 * Implement Firebase for saving score on the cloud.
 * Implement VR Interaction.
+* Implement Ingame google feedback forms to use for QA and User Testing.
+* Do 5 play Tests
