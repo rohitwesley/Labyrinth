@@ -7,14 +7,14 @@ public class ProceduralWall : MonoBehaviour
     /// <summary>
     /// ProceduralWall Model
     /// </summary>
-    
-    [Range(0.01f,10)]
+
+    [Range(0.01f, 10)]
     [SerializeField] private float mazeScale = 0.3f;
-    [Range(1,10)]
+    [Range(1, 10)]
     [SerializeField] private int pathWidth = 3;
-    [Range(1,10)]
+    [Range(1, 10)]
     [SerializeField] private int wallWidth = 1;
-    
+
     Vector2Int mazeDimensions;
     int noVisitedCells;
     //Track All Cells Status
@@ -35,8 +35,8 @@ public class ProceduralWall : MonoBehaviour
     /// <summary>
     /// ProceduralWall Controler
     /// </summary>
-    
-    
+
+
     /// <summary>
     /// Initialize the Maze with starting cell
     /// </summary>
@@ -44,14 +44,14 @@ public class ProceduralWall : MonoBehaviour
     {
         // Initialise maze and status variables
         noVisitedCells = 0;
-        mazeDimensions = new Vector2Int(6,6);//new Vector2Int(40,25);
+        mazeDimensions = new Vector2Int(6, 6);//new Vector2Int(40,25);
         maze = new CellNeighbours[mazeDimensions.x, mazeDimensions.y];
         stack = new Stack<Vector2Int>();
-        
+
         // Add 1st cell to the stack
-        stack.Push(new Vector2Int(0,0));
+        stack.Push(new Vector2Int(0, 0));
         // Update 1st cells status to visited
-        maze[0,0] = CellNeighbours.Cell_Visited;
+        maze[0, 0] = CellNeighbours.Cell_Visited;
         // Track no of visited cells to know when all cells visited.
         noVisitedCells++;
 
@@ -66,70 +66,70 @@ public class ProceduralWall : MonoBehaviour
     {
         // TODO Fix drawing walls and paths
         // Walk only if not all cells are visited and not backtracked to start.
-        if(noVisitedCells < mazeDimensions.x * mazeDimensions.y)
+        if (noVisitedCells < mazeDimensions.x * mazeDimensions.y)
         {
             // Step 1 : Create Set of unvisited neighbours.
             Vector2Int currentVisitedCellIndex = stack.Peek();
-            
+
             // Collect all Neighbour States for Current Cell.
             List<Vector2Int> stackNeighbours = new List<Vector2Int>();
             // North Neighbours
-            if(currentVisitedCellIndex.y < mazeDimensions.y-1)
+            if (currentVisitedCellIndex.y < mazeDimensions.y - 1)
             {
-                Vector2Int nextVisitedCellIndex = new Vector2Int(currentVisitedCellIndex.x,currentVisitedCellIndex.y+1);
+                Vector2Int nextVisitedCellIndex = new Vector2Int(currentVisitedCellIndex.x, currentVisitedCellIndex.y + 1);
                 // Add Neighbour if there is a path or Neighbouring Cell not visited 
-                if(maze[nextVisitedCellIndex.x, nextVisitedCellIndex.y] == CellNeighbours.Cell_Empty)
+                if (maze[nextVisitedCellIndex.x, nextVisitedCellIndex.y] == CellNeighbours.Cell_Empty)
                     stackNeighbours.Add(nextVisitedCellIndex);
             }
             // South Neighbours
-            if(currentVisitedCellIndex.y > 0)
+            if (currentVisitedCellIndex.y > 0)
             {
-                Vector2Int nextVisitedCellIndex = new Vector2Int(currentVisitedCellIndex.x,currentVisitedCellIndex.y-1);
+                Vector2Int nextVisitedCellIndex = new Vector2Int(currentVisitedCellIndex.x, currentVisitedCellIndex.y - 1);
                 // Add Neighbour if there is a path or Neighbouring Cell not visited 
-                if(maze[nextVisitedCellIndex.x, nextVisitedCellIndex.y] == CellNeighbours.Cell_Empty)
+                if (maze[nextVisitedCellIndex.x, nextVisitedCellIndex.y] == CellNeighbours.Cell_Empty)
                     stackNeighbours.Add(nextVisitedCellIndex);
             }
             // West Neighbours
-            if(currentVisitedCellIndex.x < mazeDimensions.x-1)
+            if (currentVisitedCellIndex.x < mazeDimensions.x - 1)
             {
-                Vector2Int nextVisitedCellIndex = new Vector2Int(currentVisitedCellIndex.x+1,currentVisitedCellIndex.y);
+                Vector2Int nextVisitedCellIndex = new Vector2Int(currentVisitedCellIndex.x + 1, currentVisitedCellIndex.y);
                 // Add Neighbour if there is a path or Neighbouring Cell not visited 
-                if(maze[nextVisitedCellIndex.x, nextVisitedCellIndex.y] == CellNeighbours.Cell_Empty)
+                if (maze[nextVisitedCellIndex.x, nextVisitedCellIndex.y] == CellNeighbours.Cell_Empty)
                     stackNeighbours.Add(nextVisitedCellIndex);
             }
             // East Neighbours
-            if(currentVisitedCellIndex.x > 0)
+            if (currentVisitedCellIndex.x > 0)
             {
-                Vector2Int nextVisitedCellIndex = new Vector2Int(currentVisitedCellIndex.x-1,currentVisitedCellIndex.y);
+                Vector2Int nextVisitedCellIndex = new Vector2Int(currentVisitedCellIndex.x - 1, currentVisitedCellIndex.y);
                 // Add Neighbour if there is a path or Neighbouring Cell not visited 
-                if(maze[nextVisitedCellIndex.x, nextVisitedCellIndex.y] == CellNeighbours.Cell_Empty)
+                if (maze[nextVisitedCellIndex.x, nextVisitedCellIndex.y] == CellNeighbours.Cell_Empty)
                     stackNeighbours.Add(nextVisitedCellIndex);
             }
 
-            
+
             // Are there any neighbours ?
-            if(stackNeighbours.Count>0)
+            if (stackNeighbours.Count > 0)
             {
                 // Choose a random direction from the unvisited neighbours to go to
                 int nextCellDirection = Random.Range(0, stackNeighbours.Count);
                 switch (nextCellDirection)
                 {
                     // Move to North Cell
-                    case 0 :
-                            maze[currentVisitedCellIndex.x ,currentVisitedCellIndex.y] = CellNeighbours.Cell_Path_N;
-                            break;
+                    case 0:
+                        maze[currentVisitedCellIndex.x, currentVisitedCellIndex.y] = CellNeighbours.Cell_Path_N;
+                        break;
                     // Move to South Cell
-                    case 1 :
-                            maze[currentVisitedCellIndex.x ,currentVisitedCellIndex.y] = CellNeighbours.Cell_Path_S;
-                            break;
+                    case 1:
+                        maze[currentVisitedCellIndex.x, currentVisitedCellIndex.y] = CellNeighbours.Cell_Path_S;
+                        break;
                     // Move to West Cell
-                    case 2 :
-                            maze[currentVisitedCellIndex.x ,currentVisitedCellIndex.y] = CellNeighbours.Cell_Path_W;
-                            break;
+                    case 2:
+                        maze[currentVisitedCellIndex.x, currentVisitedCellIndex.y] = CellNeighbours.Cell_Path_W;
+                        break;
                     // Move to East Cell
-                    case 3 :
-                            maze[currentVisitedCellIndex.x ,currentVisitedCellIndex.y] = CellNeighbours.Cell_Path_E;
-                            break;
+                    case 3:
+                        maze[currentVisitedCellIndex.x, currentVisitedCellIndex.y] = CellNeighbours.Cell_Path_E;
+                        break;
                 }
 
                 // Debug.Log("New Cell: " + stack.Peek().x + "," + stack.Peek().y);
@@ -137,7 +137,7 @@ public class ProceduralWall : MonoBehaviour
                 // Add next cell to the stack
                 stack.Push(stackNeighbours[nextCellDirection]);
                 // Update next cells status to visited
-                maze[stackNeighbours[nextCellDirection].x ,stackNeighbours[nextCellDirection].y] = CellNeighbours.Cell_Visited;
+                maze[stackNeighbours[nextCellDirection].x, stackNeighbours[nextCellDirection].y] = CellNeighbours.Cell_Visited;
                 // Track no of visited cells to know when all cells visited.
                 noVisitedCells++;
             }
@@ -146,7 +146,7 @@ public class ProceduralWall : MonoBehaviour
                 // Backtrack
                 stack.Pop();
             }
-            
+
 
         }
     }
@@ -154,7 +154,7 @@ public class ProceduralWall : MonoBehaviour
     /// <summary>
     /// ProceduralWall View
     /// </summary>
-    
+
     private void Start()
     {
         Debug.Log("Initializing Maze.");
@@ -163,10 +163,11 @@ public class ProceduralWall : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Tab))
-        WalkMaze();
+        if (Input.GetKeyDown(KeyCode.Tab))
+            WalkMaze();
     }
 
+    #region Gizmo Draw
     /// <summary>
     /// Draw maze 
     /// </summary>
@@ -299,6 +300,5 @@ public class ProceduralWall : MonoBehaviour
         }
 
     }
-
-
+    #endregion
 }
